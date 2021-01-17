@@ -45,29 +45,28 @@ class MBSystem:
         self.fourier_quantities = {}
 
     def save_consts(self):
-        wb = Workbook()
-        ws1 = wb.active
-        ws1.title = "omega"
+            # unfinished
+        # wb = Workbook()
+        # ws1 = wb.active
+        # ws1.title = "omega"
 
-        for row in range(self.omega.shape[1]):
-            for col in range(self.omega.shape[0]):
-                _ = ws1.cell(column=col + 1, row=row + 1, value=str(self.omega[col][row]))
+        # for row in range(self.omega.shape[1]):
+        #     for col in range(self.omega.shape[0]):
+        #         _ = ws1.cell(column=col + 1, row=row + 1, value=str(self.omega[col][row]))
 
-        ws2 = wb.create_sheet(title="gamma")
+        # ws2 = wb.create_sheet(title="gamma")
 
-        for i in range(self.gamma.shape[0]):
-            _ = ws2.cell(column=col + 1, row=row + 1, value=str(self.gamma[i]))
+        # for i in range(self.gamma.shape[0]):
+        #     _ = ws2.cell(column=col + 1, row=row + 1, value=str(self.gamma[i]))
 
-        ws3 = wb.create_sheet(title="gamma")
+        # ws3 = wb.create_sheet(title="gamma")
 
-        for i in range(self.delta.shape[0]):
-            _ = ws3.cell(column=col + 1, row=row + 1, value=str(self.delta[i]))
+        # for i in range(self.delta.shape[0]):
+        #     _ = ws3.cell(column=col + 1, row=row + 1, value=str(self.delta[i]))
 
-        wb.save(filename='consts.xlsx')
+        # wb.save(filename='consts.xlsx')
 
-        pickle.dump(self.gamma, open("gamma.p", "wb"))
-        pickle.dump(self.delta, open("delta.p", "wb"))
-        pickle.dump(self.omega, open("omega.p", "wb"))
+        pickle.dump((self.gamma, self.delta, self.omega), open("consts_MB.p", "wb"))
 
     def generate_consts(self):
         for i in range(num_a):
@@ -82,10 +81,8 @@ class MBSystem:
 
         self.save_consts()
 
-    def read_consts(self):
-        self.omega = pickle.load(open("omega.p", "rb"))
-        self.gamma = pickle.load(open("gamma.p", "rb"))
-        self.delta = pickle.load(open("delta.p", "rb"))
+    def load_consts(self):
+        self.gamma, self.delta, self.omega = pickle.load(open("consts.p", "rb"))
 
     def initial_conditions(self):
         for i in range(num_a):
