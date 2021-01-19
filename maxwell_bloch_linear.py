@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import numpy.linalg as la
 import pickle
+import os
 from math import exp, log10, log
 from random import uniform, seed
 from tqdm import tqdm
@@ -216,35 +217,37 @@ class MBLSystem:
 
         self.plot_graph(x=alpha_stamps, xlabel='<α>')
 
-    def average_probabilities(self):
-        self.generate_consts()
-        self.init_matrix()
-        self.sort_vectors_by_frequency()
+    def average_probabilities(self, plot=False, start_over=True):
         incr_delta = 0.0005
         deltas = np.arange(0, 0.0125, incr_delta)
-        i = 0
 
-        probabilities, number_of_averages = pickle.load(open("probab0.p", "rb"))
-        # probabilities = np.array([self.probabilities(self.freq[:num_a], delta, incr_delta) for delta in deltas])
-        # number_of_averages = 1
+        if plot:
+            probabilities, _ = pickle.load(open("probab0.p", "rb"))
+            self.quantities['P(Δ)'] = np.log(probabilities)
+            self.plot_graph(xlabel='Δ', x=deltas)
+            return
+
+        if start_over:
+            number_of_averages = 0
+            probabilities = np.zeros((len(deltas)))
+        else:
+            probabilities, number_of_averages = pickle.load(open("probab0.p", "rb"))
 
         while True:
-            self.generate_consts()
-            self.init_matrix()
-            self.sort_vectors_by_frequency()
+            self.generate_consts(alpha_average=1)
+            system_matrix = self.build_matrix(D0=0.5)
+            freq, vec = self.eigen(matrix=system_matrix)
+            freq, vec = self.sort_by_decay(freq, vec)
 
-            new_probabilities = np.array([self.probabilities(self.freq[:num_a], delta, incr_delta) for delta in deltas])
+            new_probabilities = np.array([self.probabilities(freq[:num_a], delta, incr_delta) for delta in deltas])
             probabilities = self.update_probabilities(probabilities, new_probabilities, number_of_averages)
-            pickle.dump((probabilities, number_of_averages + 1), open("probab" + str(i) + ".p", "wb"))
-            i += 1
-            i %= 2
+
             number_of_averages += 1
+            i = number_of_averages % 2
+
+            pickle.dump((probabilities, number_of_averages), open("probab" + str(i) + ".p", "wb"))
+
             print(number_of_averages)
-            break
-        probabilities1, number_of_averages = pickle.load(open("probab3.p", "rb"))
-        self.quantities.append(
-            Plot(graph_x=deltas, graph_y=np.array([np.log(probabilities), np.log(probabilities1)]).T))
-        self.plot_graph(xlabel='Δ')
 
     def animate_re_im(self):
         plt.ion()
