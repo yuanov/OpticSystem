@@ -1,7 +1,7 @@
-from pole import Pole
-from maxwell_bloch import MBSystem
-from maxwell_bloch_linear import MBLSystem
-from field import Field
+from fresnel.pole import Pole
+from fresnel.field import Field
+from maxwell_bloch.non_linear import MBSystem
+from maxwell_bloch.linear import MBLSystem
 
 # mbl
 # mbl = MBLSystem()

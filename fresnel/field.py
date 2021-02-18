@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from cmath import sqrt, exp
-from constants import Constants
+from fresnel.constants import Constants
 
 
 class Field(Constants):

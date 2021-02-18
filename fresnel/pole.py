@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from cmath import sqrt, exp
 from math import log10
-from constants import Constants
+from fresnel.constants import Constants
 from tqdm import tqdm
 
 ReW_min = 3
