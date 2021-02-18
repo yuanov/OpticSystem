@@ -1,12 +1,12 @@
-from dictionary import Dictionary
 from pole import Pole
 from maxwell_bloch import MBSystem
 from maxwell_bloch_linear import MBLSystem
+from field import Field
 
 # mbl
-mbl = MBLSystem()
+# mbl = MBLSystem()
 
-mbl.generate_consts()
+# mbl.generate_consts()
 # mbl.load_consts()
 
 # mbl.heatmap_logD_alpha_V()
@@ -28,7 +28,10 @@ mbl.generate_consts()
 # mb.plot_fourier()
 
 # Pole
-# dict = Dictionary()
-#
-# pole = Pole(thickness=dict.thickness, epsilon=dict.epsilon, tls=dict.tls, rest=dict.rest)
-# pole.plot_distribution()
+pole = Pole(w=4.6, alpha=0.5)
+pole.plot_distribution()
+
+# Field
+# field = Field(w=4.6, alpha=0.2)
+# field.plot()
+

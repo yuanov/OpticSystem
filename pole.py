@@ -2,29 +2,24 @@ import numpy as np
 import matplotlib.pyplot as plt
 from cmath import sqrt, exp
 from math import log10
-from dictionary import pc_cells
+from constants import Constants
 from tqdm import tqdm
 
-ReW_min = 5.25
-ReW_max = 7
-ImW_min = -0.2
-ImW_max = 0.9
+ReW_min = 3
+ReW_max = 6
+ImW_min = -0.5
+ImW_max = 0.5
 
-graph_t = 3 * 10 ** -3
-smooth_out = False
+graph_t = 10
+smooth_out = True
 
 
-class Pole:
-    def __init__(self, thickness, epsilon, tls, rest):
-        self.thickness = thickness
-        self.epsilon = epsilon
-        self.tls = tls
-        self.rest = rest
+class Pole(Constants):
+    def __init__(self, w, alpha=0):
+        super().__init__()
 
-        self.w = None
-        self.alpha = 0.998
-
-        self.material_tags = ['vac', 'pas', 'act']
+        self.w = w
+        self.alpha = alpha
 
         self.surface_in, self.surface_out, self.medium = {}, {}, {}
         for material_tag in self.material_tags:
@@ -67,10 +62,10 @@ class Pole:
         omega_tls = self.tls['omega']
         gamma_tls = self.tls['gamma']
 
-        if abs(w - omega_tls + 1j * gamma_tls) < pow(10, -6):
+        if abs(w - omega_tls + 1j * gamma_tls) < 0.2:
             return 1
         else:
-            return epsilon['material'] + alpha * gamma_tls / (w - omega_tls + 1j * gamma_tls)
+            return epsilon['mat'] + alpha * gamma_tls / (w - omega_tls + 1j * gamma_tls)
 
     def refresh_surface(self):
         for material_tag in self.material_tags:
@@ -88,7 +83,7 @@ class Pole:
 
     def refresh_medium(self):
         w = self.w
-        c = self.rest['c']
+        c = self.c
 
         for material_tag in self.material_tags:
             self.medium[material_tag][0][0] = exp(
@@ -97,13 +92,14 @@ class Pole:
                 -w * 1j * sqrt(self.epsilon[material_tag]) * self.thickness[material_tag] / c)
 
     def transition_pc(self, matrix):
-        for i in range(pc_cells):
-            matrix = self.transition(matrix, 'act')
+        for i in range(self.pc_cells):
             matrix = self.transition(matrix, 'pas')
+            matrix = self.transition(matrix, 'act')
+
         return matrix
 
     def transition(self, matrix, material_tag):
-        if material_tag == 'vac':
+        if material_tag == 'vac' or material_tag == 'vac_eq_pc':
             matrix = np.dot(self.medium[material_tag], matrix)
             return matrix
 
@@ -116,9 +112,12 @@ class Pole:
         T = np.eye(2)
         self.refresh_surface()
         self.refresh_medium()
-        T = self.transition(T, 'vac')
+        # T = self.transition(T, 'vac')
+        T = self.transition(T, 'res1')
         T = self.transition_pc(T)
-        T = self.transition(T, 'vac')
+        # T = self.transition(T, 'vac_eq_pc')
+        T = self.transition(T, 'res2')
+        # T = self.transition(T, 'vac')
 
         return T
 

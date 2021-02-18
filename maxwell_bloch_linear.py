@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import numpy.linalg as la
 import pickle
-import os
 from math import exp, log10, log
 from random import uniform, seed
 from tqdm import tqdm
