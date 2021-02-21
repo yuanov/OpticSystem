@@ -24,7 +24,6 @@ class Field(Constants):
         self.E[0] = 0
         self.E[1] = 1
 
-        self.box_size = 0
         self.boxes = []
 
         self.x_graph = []
@@ -82,8 +81,6 @@ class Field(Constants):
         y = np.array(self.y_graph)
 
         dx = self.increment_x
-
-        self.box_size /= np.max(y)
         y /= np.max(y)
         x -= np.max(x)
         x = -x
@@ -95,9 +92,9 @@ class Field(Constants):
         plt.xlabel('x')
         for x1, x2, material_tag in self.boxes:
             material_color = self.get_color(material_tag)
-            plt.plot([x1 + dx, x1 + dx], [0, self.box_size], color='gray')
-            plt.plot([x1 + dx, x2 - dx], [self.box_size, self.box_size], color=material_color)
-            plt.plot([x2 - dx, x2 - dx], [0, self.box_size], color='gray')
+            plt.plot([x1 + dx, x1 + dx], [0, 1], color='gray')
+            plt.plot([x1 + dx, x2 - dx], [1, 1], color=material_color)
+            plt.plot([x2 - dx, x2 - dx], [0, 1], color='gray')
 
         plt.plot(x, y, '-b')
 
@@ -128,8 +125,6 @@ class Field(Constants):
             self.x_graph.append(x)
             self.y_graph.append(self.y_quantity(E, material_tag))
 
-            self.box_size = max(self.box_size, self.y_graph[-1])
-
             x_current = x_current - increment_x
             x = x + increment_x
         if not material_tag == 'vac':
@@ -151,3 +146,9 @@ class Field(Constants):
         self.transition('vac')
 
         self._plot()
+
+    def inverted_pc_experiment(self):
+        self.epsilon['mat'] = 1
+
+        alphas = np.linspace(0, 2, 0.1)
+        epsilons = np.linspace()
