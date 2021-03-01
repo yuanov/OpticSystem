@@ -1,7 +1,4 @@
 from fresnel.pole import Pole
-from fresnel.field import Field
-from maxwell_bloch.non_linear import MBSystem
-from maxwell_bloch.linear import MBLSystem
 
-field = Field(w=4.6, alpha=0.2)
-field.plot()
+pole = Pole()
+pole.inverted_pc_experiment(re_w=[3, 6], im_w=[-0.5, 0.5], alpha=[0, 1], log_scale=True, clip_t=0.5)

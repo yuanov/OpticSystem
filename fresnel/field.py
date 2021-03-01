@@ -99,7 +99,6 @@ class Field(Constants):
         plt.plot(x, y, '-b')
 
         plt.show()
-        plt.close()
 
     def y_quantity(self, E, material_tag):
         return sqrt(self.epsilon[material_tag]).real * pow(abs(E[0] + E[1]), 2)
@@ -147,8 +146,3 @@ class Field(Constants):
 
         self._plot()
 
-    def inverted_pc_experiment(self):
-        self.epsilon['mat'] = 1
-
-        alphas = np.linspace(0, 2, 0.1)
-        epsilons = np.linspace()
