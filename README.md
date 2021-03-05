@@ -35,11 +35,15 @@ mb.plot_fourier()
 
 # Pole
 ```
-from fresnel.pole import Pole
+import fresnel.config as config
+from fresnel.dependency import re_im_t
 
-pole = Pole(alpha=0.5, log_scale=True, clip_t=10)
-pole.plot(re_w=[3, 6], im_w=[-0.5, 0.5])
-pole.inverted_pc_experiment(re_w=[3, 6], im_w=[-0.5, 0.5], alpha=[0, 1])
+configuration = config.NegActPC()
+re_im_t.plot(re_w=[3, 6], im_w=[-0.5, 0.5], alpha=[0.1, 0.3],
+             config=configuration,
+             log_scale=True,
+             clip_t=0.5,
+             save_as='T(re, im)')
 ```
 
 # Field
